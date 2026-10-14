@@ -201,7 +201,7 @@ export const NodeDetailDialog: React.FC<NodeDetailDialogProps> = ({ node, isDemo
         : hasBucketLoss
           ? orderedPoints.reduce((sum, point) => sum + (point.loss ?? 0), 0) / Math.max(1, orderedPoints.length)
           : undefined
-      const recentLatency = [...orderedPoints].reverse().find((point) => point.latency !== null)?.latency ?? null
+      const recentLatency = orderedPoints[orderedPoints.length - 1]?.latency ?? null
       return {
         id,
         name: history.probes?.[String(id)] || `监控 ${id}`,
