@@ -2,7 +2,7 @@
   "name": "MIUIX",
   "short": "miuix",
   "description": "极简清晰的服务器节点状态面板，采用轻盈的 Miuix 设计风格。",
-  "version": "2.1.0",
+  "version": "2.2.0",
   "author": "agczsz",
   "url": "https://github.com/agczsz/monitor-miuix",
   "config": [

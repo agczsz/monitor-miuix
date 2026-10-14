@@ -64,6 +64,7 @@ interface TrendSeries {
   points: TrendPoint[]
   currentValue?: number
   showMarkers?: boolean
+  showArea?: boolean
   maxGapSeconds?: number
 }
 
@@ -130,7 +131,7 @@ const TrendHistoryChart: React.FC<TrendHistoryChartProps> = ({ title, series, mi
                 const last = segment[segment.length - 1]
                 const areaPath = `${path} L${xPosition(last.ts, minTs, maxTs, width).toFixed(1)},${bottom} L${xPosition(first.ts, minTs, maxTs, width).toFixed(1)},${bottom} Z`
                 return <g key={`${item.name}-segment-${segmentIndex}`}>
-                  <path d={areaPath} fill={`url(#${id}-fill-${index})`}/>
+                  {item.showArea !== false && <path d={areaPath} fill={`url(#${id}-fill-${index})`}/>}
                   {segment.length === 1
                     ? <circle cx={xPosition(first.ts, minTs, maxTs, width)} cy={yPosition(first.value ?? 0, effectiveMax, height)} r="3" fill={item.color}/>
                     : <path d={path} fill="none" stroke={item.color} strokeWidth="2" strokeLinejoin="round" strokeLinecap="round"/>}
@@ -258,6 +259,7 @@ export const NodeDetailDialog: React.FC<NodeDetailDialogProps> = ({ node, isDemo
           color: series.color,
           points: series.points.map((point) => ({ ts: point.ts, value: point.latency, loss: point.loss, band: point.band })),
           showMarkers: true,
+          showArea: false,
           maxGapSeconds: Math.max(history.step * 2, 120),
         }))
       : chartData.netPoints.map((series) => ({ name: series.name, color: series.color, points: series.data, currentValue: series.data.at(-1)?.value }))
@@ -271,14 +273,8 @@ export const NodeDetailDialog: React.FC<NodeDetailDialogProps> = ({ node, isDemo
           <div className="chart-empty">当前时间范围内没有延迟监控数据。</div>
         ) : isPing ? (
           <>
-            <div className="node-detail-ping-charts">
-              {activeSeries.map((series) => {
-                const last = series.points.at(-1)
-                const valueText = !last || last.value === null ? "无响应" : `${last.value.toFixed(0)} ms`
-                return <TrendHistoryChart key={series.name} title={series.name} series={[series]} minTs={chartData.minTs} maxTs={chartData.maxTs} maxValue={maxValue} axisFormatter={formatLatency} ariaLabel={`${series.name}延迟和丢包历史`} id={`${svgId}-probe-${series.name.replace(/[^a-zA-Z0-9_-]/g, "-")}`} width={metricChartWidth} height={metricChartHeight} valueText={valueText} />
-              })}
-            </div>
-            <div className="chart-legend">
+            <TrendHistoryChart title="三网延迟与丢包 (Ping)" series={activeSeries} minTs={chartData.minTs} maxTs={chartData.maxTs} maxValue={maxValue} axisFormatter={formatLatency} ariaLabel="三网延迟与丢包历史趋势" id={svgId} width={chartWidth} height={chartHeight} valueText={chartData.ping.filter((series) => node.online || series.latest !== null).map((series) => `${series.name} ${series.latest === null ? "无响应" : `${series.latest.toFixed(0)} ms`}`).join(" · ")} />
+            <div className="chart-legend node-detail-ping-legend">
               {chartData.ping.filter((series) => node.online || series.latest !== null).map((series) => (
                 <div key={series.id} className="node-detail-ping-card" style={{ opacity: series.latest === null ? 0.55 : 1 }}>
                   <div className="node-detail-ping-card-title"><i style={{ backgroundColor: series.color }}/><span>{series.name}</span></div>
