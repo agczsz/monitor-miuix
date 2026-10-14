@@ -1,0 +1,28 @@
+{
+  "name": "Miuix",
+  "short": "miuix",
+  "description": "一款受 Miuix 启发的轻盈、多彩节点状态面板。",
+  "version": "0.1.0",
+  "author": "agczsz",
+  "url": "https://github.com/agczsz/monitor-miuix",
+  "config": [
+    {
+      "type": "title",
+      "label": "首页"
+    },
+    {
+      "key": "show_summary",
+      "type": "boolean",
+      "label": "显示运行总览",
+      "default": true,
+      "help": "显示在线节点、平均负载、流量与区域统计。"
+    },
+    {
+      "key": "notice",
+      "type": "text",
+      "label": "公告",
+      "default": "",
+      "help": "显示在节点列表之前，留空则不显示。"
+    }
+  ]
+}

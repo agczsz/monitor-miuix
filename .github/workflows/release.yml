@@ -1,0 +1,51 @@
+name: Release theme
+
+on:
+  push:
+    tags:
+      - "v*"
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out source
+        uses: actions/checkout@v4
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 24
+          cache: npm
+      - name: Install dependencies
+        run: npm ci
+      - name: Check release version
+        if: startsWith(github.ref, 'refs/tags/')
+        shell: bash
+        run: |
+          tag="${GITHUB_REF_NAME#v}"
+          version="$(node -p "require('./theme.json').version")"
+          test "$tag" = "$version" || { echo "Tag $tag does not match theme.json version $version"; exit 1; }
+      - name: Build
+        run: npm run build
+      - name: Test
+        run: npm test
+      - name: Lint
+        run: npm run lint
+      - name: Package theme
+        shell: bash
+        run: |
+          mkdir -p package/miuix
+          cp theme.json preview.png package/miuix/
+          cp -R dist package/miuix/dist
+          tar -C package -czf theme.tar.gz miuix
+          gzip -t theme.tar.gz
+      - name: Publish release
+        if: startsWith(github.ref, 'refs/tags/')
+        uses: softprops/action-gh-release@v2
+        with:
+          files: theme.tar.gz
+          generate_release_notes: true
