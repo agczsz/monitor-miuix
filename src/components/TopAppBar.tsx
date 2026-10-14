@@ -33,42 +33,47 @@ export const TopAppBar: React.FC<TopAppBarProps> = ({
   const [scrolled, setScrolled] = useState(false)
 
   useEffect(() => {
-    const onScroll = () => setScrolled(window.scrollY > 28)
+    let frame = 0
+    const update = () => {
+      frame = 0
+      const scrollY = window.scrollY
+      // Keep a wide hysteresis band so slow trackpad/touch scrolling around
+      // the compact threshold cannot repeatedly expand and collapse the bar.
+      setScrolled((current) => current ? scrollY > 12 : scrollY > 64)
+    }
+    const onScroll = () => {
+      if (frame) return
+      frame = window.requestAnimationFrame(update)
+    }
+    update()
     window.addEventListener("scroll", onScroll, { passive: true })
-    return () => window.removeEventListener("scroll", onScroll)
+    return () => {
+      window.removeEventListener("scroll", onScroll)
+      if (frame) window.cancelAnimationFrame(frame)
+    }
   }, [])
 
   const modeLabel = colorMode === "system" ? "跟随系统" : colorMode === "light" ? "浅色" : "深色"
 
   return (
     <header
-      className={enableBlur ? "miuix-glass" : ""}
+      className={`${enableBlur ? "miuix-glass" : ""} miuix-topbar ${scrolled ? "is-compact" : ""}`}
       style={{
         position: "sticky",
         top: 0,
         zIndex: 40,
         backgroundColor: enableBlur ? undefined : "var(--miuix-surface)",
-        transition: "padding 0.25s var(--miuix-folme-spring)",
       }}
     >
-      <div
-        className="miuix-container"
-        style={{
-          paddingTop: scrolled ? "12px" : "22px",
-          paddingBottom: scrolled ? "12px" : "18px",
-          display: "flex",
-          flexWrap: "wrap",
-          alignItems: "center",
-          justifyContent: "space-between",
-          gap: "16px",
-        }}
-      >
-        {/* Left Brand & Miuix Large Title */}
-        <div style={{ display: "flex", alignItems: "center", gap: "14px" }}>
-          <div
+      <div className="miuix-container miuix-topbar-content">
+        <div className="miuix-topbar-main-row">
+          {/* Left Brand & Miuix Large Title */}
+          <div className="miuix-topbar-brand" style={{ display: "flex", alignItems: "center", gap: "14px" }}>
+            <div
+            className="miuix-topbar-logo"
             style={{
-              width: scrolled ? "38px" : "46px",
-              height: scrolled ? "38px" : "46px",
+              width: "46px",
+              height: "46px",
               borderRadius: "14px",
               background: "linear-gradient(135deg, var(--miuix-primary-container), var(--miuix-primary))",
               display: "flex",
@@ -84,38 +89,37 @@ export const TopAppBar: React.FC<TopAppBarProps> = ({
               <polyline points="22 12 18 12 15 21 9 3 6 12 2 12" />
             </svg>
           </div>
-          <div>
-            <div style={{ display: "flex", alignItems: "center", gap: "10px", flexWrap: "wrap" }}>
-              <h1 className={scrolled ? "miuix-title3" : "miuix-title1"} style={{ transition: "font-size 0.25s var(--miuix-folme-spring)" }}>
-                {siteTitle}
-              </h1>
-              <span
-                style={{
-                  display: "inline-flex",
-                  alignItems: "center",
-                  gap: "6px",
-                  padding: "4px 10px",
-                  borderRadius: "999px",
-                  fontSize: "12px",
-                  fontWeight: 600,
-                  backgroundColor: "var(--miuix-tertiary-container)",
-                  color: "var(--miuix-on-tertiary-container)",
-                }}
-              >
-                <span className={onlineCount > 0 ? "miuix-dot-online" : "miuix-dot-offline"} style={{ width: 7, height: 7 }} />
-                {isDemo ? "演示预览" : wsConnected ? "实时流 · WS" : "HTTP 轮询"} · {onlineCount}/{totalCount} 在线
-              </span>
+          <div className="miuix-topbar-title-wrap">
+            <div className="miuix-topbar-heading">
+              <div className="miuix-topbar-titleline">
+                <h1 className={`miuix-topbar-title ${scrolled ? "is-compact" : ""}`}>
+                  {siteTitle}
+                </h1>
+                <span
+                  className="miuix-topbar-status"
+                  style={{
+                    display: "inline-flex",
+                    alignItems: "center",
+                    gap: "6px",
+                    padding: "4px 10px",
+                    borderRadius: "999px",
+                    fontSize: "12px",
+                    fontWeight: 600,
+                    backgroundColor: "var(--miuix-tertiary-container)",
+                    color: "var(--miuix-on-tertiary-container)",
+                  }}
+                >
+                  <span className={onlineCount > 0 ? "miuix-dot-online" : "miuix-dot-offline"} style={{ width: 7, height: 7 }} />
+                  {isDemo ? "演示预览" : wsConnected ? "实时流 · WS" : "HTTP 轮询"} · {onlineCount}/{totalCount} 在线
+                </span>
+              </div>
+              <p className={`miuix-topbar-subtitle ${scrolled || !siteSubtitle ? "is-hidden" : ""}`}>{siteSubtitle}</p>
             </div>
-            {!scrolled && siteSubtitle && (
-              <p className="miuix-footnote1" style={{ color: "var(--miuix-on-surface-summary)", marginTop: "3px" }}>
-                {siteSubtitle}
-              </p>
-            )}
           </div>
         </div>
 
         {/* Right MiuixSearchBar & Action Buttons */}
-        <div style={{ display: "flex", alignItems: "center", gap: "10px", flexWrap: "wrap", flex: "1 1 auto", justifyContent: "flex-end" }}>
+        <div className="miuix-topbar-actions" style={{ display: "flex", alignItems: "center", gap: "10px", flexWrap: "wrap", flex: "1 1 auto", justifyContent: "flex-end" }}>
           <div
             style={{
               position: "relative",
@@ -201,7 +205,7 @@ export const TopAppBar: React.FC<TopAppBarProps> = ({
               alignItems: "center",
               gap: "6px",
             }}
-            title="极简探针外观设置"
+            title="MIUIX 外观设置"
           >
             <span>🎨</span>
             <span>外观设置</span>
@@ -223,6 +227,7 @@ export const TopAppBar: React.FC<TopAppBarProps> = ({
           >
             控制台
           </a>
+        </div>
         </div>
       </div>
     </header>

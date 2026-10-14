@@ -125,7 +125,8 @@ export const App: React.FC = () => {
       })
   }, [publicNodes, selectedGroup, statusFilter, searchQuery, sortBy])
 
-  const siteTitle = me?.site_name || me?.title || manifest.name
+  const configuredTitle = me?.site_name || me?.title
+  const siteTitle = configuredTitle && configuredTitle !== "极简探针" ? configuredTitle : manifest.name
   const onlineCount = publicNodes.filter((n) => n.online).length
 
   return (
