@@ -17,7 +17,7 @@ npm test
 npm run preview
 ```
 
-The release payload is a directory named `miuix/` containing `theme.json`, `preview.png`, and `dist/`. The GitHub Actions workflow packages and attaches it as `theme.tar.gz` for `v*` releases after checking build, tests, lint, and the manifest version.
+The release payload is a directory named `miuix/` containing `theme.json`, `preview.png`, and `dist/`. The GitHub Actions workflow packages and attaches it as `theme.tar.gz` for `v*` releases after checking build, tests, lint, and the manifest version. This repository is published under the standard MIT License, which permits commercial use.
 
 ## Theme design
 
