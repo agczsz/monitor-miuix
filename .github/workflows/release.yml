@@ -49,7 +49,7 @@ jobs:
           tar -tzf theme.tar.gz | grep -qx 'theme.json'
           tar -tzf theme.tar.gz | grep -qx 'preview.png'
           tar -tzf theme.tar.gz | grep -qx 'dist/index.html'
-          if tar -tzf theme.tar.gz | grep -q '^miuix/'; then
+          if tar -tzf theme.tar.gz | grep '^miuix/' >/dev/null; then
             echo 'The theme archive must place theme.json and dist/ at its root.' >&2
             exit 1
           fi
