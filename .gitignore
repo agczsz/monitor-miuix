@@ -5,3 +5,5 @@ dist/
 .DS_Store
 release/
 theme.tar.gz
+.uploaded-source/
+package/
