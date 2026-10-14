@@ -166,14 +166,14 @@ export const NodeCard: React.FC<NodeCardProps> = ({ node, showBilling, onSelect 
       {/* Footer: price left, uptime right. */}
       <div className="node-card-footer">
         {showBilling && node.price != null ? (
-          <span className="node-card-price">
+          <span className="node-card-price-plain">
             {node.currency || "¥"}{node.price}/{node.billing_cycle || "月"}
             {remDays !== null ? ` · ${remDays >= 0 ? `余${remDays}天` : "已到期"}` : ""}
           </span>
         ) : <span />}
         <div className="node-card-uptime">
           {node.last_seen_ago != null && !node.online && <span className="last-seen-label">离线 {formatDuration(node.last_seen_ago)}</span>}
-          <span className="resource-label"><ResourceIcon name="clock" size={13} />{node.online ? (onlineDuration === null || onlineDuration <= 0 ? "在线" : formatUptime(onlineDuration)) : "已离线"}</span>
+          <span className="resource-label node-card-uptime-badge"><ResourceIcon name="clock" size={13} />{node.online ? (onlineDuration === null || onlineDuration <= 0 ? "在线" : formatUptime(onlineDuration)) : "已离线"}</span>
         </div>
       </div>
     </article>

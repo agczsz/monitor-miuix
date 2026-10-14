@@ -2,7 +2,7 @@
   "name": "极简探针",
   "short": "miuix",
   "description": "极简清晰的服务器节点状态面板，采用轻盈的 Miuix 设计风格。",
-  "version": "0.1.2",
+  "version": "2.0.0",
   "author": "agczsz",
   "url": "https://github.com/agczsz/monitor-miuix",
   "config": [
