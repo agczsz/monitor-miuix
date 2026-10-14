@@ -2,7 +2,7 @@
   "name": "Miuix",
   "short": "miuix",
   "description": "一款受 Miuix 启发的轻盈、多彩节点状态面板。",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "author": "agczsz",
   "url": "https://github.com/agczsz/monitor-miuix",
   "config": [

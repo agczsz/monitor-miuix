@@ -38,11 +38,21 @@ jobs:
       - name: Package theme
         shell: bash
         run: |
-          mkdir -p package/miuix
-          cp theme.json preview.png package/miuix/
-          cp -R dist package/miuix/dist
-          tar -C package -czf theme.tar.gz miuix
+          mkdir -p package
+          cp theme.json preview.png package/
+          cp -R dist package/dist
+          test -f package/theme.json
+          test -f package/preview.png
+          test -f package/dist/index.html
+          tar -C package -czf theme.tar.gz theme.json preview.png dist
           gzip -t theme.tar.gz
+          tar -tzf theme.tar.gz | grep -qx 'theme.json'
+          tar -tzf theme.tar.gz | grep -qx 'preview.png'
+          tar -tzf theme.tar.gz | grep -qx 'dist/index.html'
+          if tar -tzf theme.tar.gz | grep -q '^miuix/'; then
+            echo 'The theme archive must place theme.json and dist/ at its root.' >&2
+            exit 1
+          fi
       - name: Publish release
         if: startsWith(github.ref, 'refs/tags/')
         uses: softprops/action-gh-release@v2
