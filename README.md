@@ -2,7 +2,8 @@
 
 基于 [compose-miuix-ui/miuix](https://github.com/compose-miuix-ui/miuix) 设计语言（Xiaomi HyperOS 视觉风格）开发的 [monitor-probe/monitor](https://github.com/monitor-probe/monitor) 公开状态页主题，完全遵循 [monitor-probe/themes](https://github.com/monitor-probe/themes) 主题站收录与打包规范。
 
-![极简探针 Miuix 主题预览](./preview.png)
+<img width="2257" height="1219" alt="final-preview" src="https://github.com/user-attachments/assets/c399c5eb-cffd-4260-8d2f-3c226d10624c" />
+
 
 ## 1. 核心特性
 
