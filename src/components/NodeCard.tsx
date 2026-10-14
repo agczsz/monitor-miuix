@@ -173,7 +173,7 @@ export const NodeCard: React.FC<NodeCardProps> = ({ node, showBilling, onSelect 
         ) : <span />}
         <div className="node-card-uptime">
           {node.last_seen_ago != null && !node.online && <span className="last-seen-label">离线 {formatDuration(node.last_seen_ago)}</span>}
-          <span className="resource-label"><ResourceIcon name="clock" size={13} />{node.online ? (onlineDuration === null ? "在线" : formatUptime(onlineDuration)) : "已离线"}</span>
+          <span className="resource-label"><ResourceIcon name="clock" size={13} />{node.online ? (onlineDuration === null || onlineDuration <= 0 ? "在线" : formatUptime(onlineDuration)) : "已离线"}</span>
         </div>
       </div>
     </article>
