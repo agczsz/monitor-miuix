@@ -54,8 +54,6 @@ function smoothLinePath(values: Array<{ ts: number; value: number }>, minTs: num
 interface TrendPoint {
   ts: number
   value: number | null
-  loss?: number
-  band?: [number, number]
 }
 
 interface TrendSeries {
@@ -63,8 +61,6 @@ interface TrendSeries {
   color: string
   points: TrendPoint[]
   currentValue?: number
-  showMarkers?: boolean
-  showArea?: boolean
   maxGapSeconds?: number
 }
 
@@ -117,7 +113,6 @@ const TrendHistoryChart: React.FC<TrendHistoryChartProps> = ({ title, series, mi
             const y = yPosition(tick, effectiveMax, height)
             return <g key={tick}><line x1={CHART.left} y1={y} x2={width - CHART.right} y2={y} stroke="var(--miuix-divider)" strokeDasharray="4 5"/><text x={CHART.left - 8} y={y + 4} fontSize="10" textAnchor="end" fill="var(--miuix-on-surface-summary)">{axisFormatter(tick)}</text></g>
           })}
-          {series.map((item) => item.points.flatMap((point) => point.band ? [{ ts: point.ts, low: point.band[0], high: point.band[1] }] : []).map((band, index) => <rect key={`${item.name}-band-${index}`} x={xPosition(band.ts, minTs, maxTs, width) - 3} y={yPosition(band.high, effectiveMax, height)} width="6" height={Math.max(1, yPosition(band.low, effectiveMax, height) - yPosition(band.high, effectiveMax, height))} fill={item.color} opacity="0.12"/>))}
           {series.map((item, index) => {
             const segments = makeSegments(item.points, item.maxGapSeconds)
             const latestPoint = [...item.points].reverse().find((point) => point.value !== null)
@@ -131,7 +126,7 @@ const TrendHistoryChart: React.FC<TrendHistoryChartProps> = ({ title, series, mi
                 const last = segment[segment.length - 1]
                 const areaPath = `${path} L${xPosition(last.ts, minTs, maxTs, width).toFixed(1)},${bottom} L${xPosition(first.ts, minTs, maxTs, width).toFixed(1)},${bottom} Z`
                 return <g key={`${item.name}-segment-${segmentIndex}`}>
-                  {item.showArea !== false && <path d={areaPath} fill={`url(#${id}-fill-${index})`}/>}
+                  <path d={areaPath} fill={`url(#${id}-fill-${index})`}/>
                   {segment.length === 1
                     ? <circle cx={xPosition(first.ts, minTs, maxTs, width)} cy={yPosition(first.value ?? 0, effectiveMax, height)} r="3" fill={item.color}/>
                     : <path d={path} fill="none" stroke={item.color} strokeWidth="2" strokeLinejoin="round" strokeLinecap="round"/>}
@@ -139,12 +134,6 @@ const TrendHistoryChart: React.FC<TrendHistoryChartProps> = ({ title, series, mi
               })}
               {item.currentValue !== undefined && <path d={`M${CHART.left},${latestY} L${width - CHART.right},${latestY}`} stroke={item.color} strokeDasharray="4 4" strokeOpacity="0.45"><title>当前值 {item.currentValue}</title></path>}
               {latestValue !== undefined && <circle cx={latestX} cy={latestY} r="3.5" fill={item.color} stroke="var(--miuix-surface-container)" strokeWidth="2"><title>{item.name} 最新值 {latestValue}</title></circle>}
-              {item.showMarkers && item.points.map((point, pointIndex) => {
-                const isTimeout = point.value === null
-                const cy = yPosition(point.value ?? effectiveMax, effectiveMax, height)
-                const radius = isTimeout ? 3.5 : 2.2 + Math.min(3.5, Math.sqrt(point.loss ?? 0))
-                return <circle key={`${item.name}-marker-${pointIndex}`} cx={xPosition(point.ts, minTs, maxTs, width)} cy={cy} r={radius} fill={isTimeout ? "var(--miuix-error)" : item.color} stroke="var(--miuix-surface)" strokeWidth="1.5"><title>{`${item.name} · ${isTimeout ? "超时" : point.loss === undefined ? "已响应" : `${point.loss}% 丢包`} · ${point.value ?? "无响应"}`}</title></circle>
-              })}
             </g>
           })}
           {timeTicks.map((ts, index) => {
@@ -257,9 +246,7 @@ export const NodeDetailDialog: React.FC<NodeDetailDialogProps> = ({ node, isDemo
       ? chartData.ping.map((series) => ({
           name: series.name,
           color: series.color,
-          points: series.points.map((point) => ({ ts: point.ts, value: point.latency, loss: point.loss, band: point.band })),
-          showMarkers: true,
-          showArea: false,
+          points: series.points.map((point) => ({ ts: point.ts, value: point.latency })),
           maxGapSeconds: Math.max(history.step * 2, 120),
         }))
       : chartData.netPoints.map((series) => ({ name: series.name, color: series.color, points: series.data, currentValue: series.data.at(-1)?.value }))
@@ -274,14 +261,15 @@ export const NodeDetailDialog: React.FC<NodeDetailDialogProps> = ({ node, isDemo
         ) : isPing ? (
           <>
             <TrendHistoryChart title="三网延迟与丢包 (Ping)" series={activeSeries} minTs={chartData.minTs} maxTs={chartData.maxTs} maxValue={maxValue} axisFormatter={formatLatency} ariaLabel="三网延迟与丢包历史趋势" id={svgId} width={chartWidth} height={chartHeight} valueText={chartData.ping.filter((series) => node.online || series.latest !== null).map((series) => `${series.name} ${series.latest === null ? "无响应" : `${series.latest.toFixed(0)} ms`}`).join(" · ")} />
-            <div className="chart-legend node-detail-ping-legend">
+            <div className="chart-legend">
               {chartData.ping.filter((series) => node.online || series.latest !== null).map((series) => (
-                <div key={series.id} className="node-detail-ping-card" style={{ opacity: series.latest === null ? 0.55 : 1 }}>
-                  <div className="node-detail-ping-card-title"><i style={{ backgroundColor: series.color }}/><span>{series.name}</span></div>
-                  <div className="node-detail-ping-card-values"><span><small>最新采样</small><b>{series.latest === null ? "无响应" : `${series.latest.toFixed(0)} ms`}</b></span><span><small>区间平均延迟</small><b>{series.average === null ? "—" : `${series.average.toFixed(0)} ms`}</b></span><span><small>时间段丢包率</small><b>{series.lossPercent === undefined ? "—" : `${formatSmallPercent(series.lossPercent)}%`}</b></span></div>
+                <div key={series.id} className="chart-legend-item" style={{ opacity: series.latest === null ? 0.55 : 1 }}>
+                  <i style={{ backgroundColor: series.color }}/>
+                  <span>{series.name}</span>
+                  <b>最新 {series.latest === null ? "无响应" : `${series.latest.toFixed(0)} ms`} · 均值 {series.average === null ? "—" : `${series.average.toFixed(0)} ms`} · 丢包 {series.lossPercent === undefined ? "—" : `${formatSmallPercent(series.lossPercent)}%`}</b>
                 </div>
               ))}
-              <small className="chart-note">平均延迟按成功响应采样计算；丢包率优先采用服务端窗口统计，没有窗口统计时根据各采样桶的丢包率计算。</small>
+              <small className="chart-note">曲线采用与网络吞吐图相同的渐变面积样式；平均延迟按成功响应采样计算，丢包率优先使用服务端窗口统计。</small>
             </div>
           </>
         ) : chartData.rows.length > 0 ? (

@@ -171,18 +171,7 @@ html, body {
 .node-detail-metric-chart { display:block; width:100%; height:auto; overflow:visible; margin-top:8px; }
 .node-detail-metric-empty { min-height:176px; display:flex; align-items:center; justify-content:center; color:var(--miuix-on-surface-summary); font-size:12px; }
 .node-detail-load-summary { grid-column:1/-1; display:flex; justify-content:space-between; gap:8px; color:var(--miuix-on-surface-summary); font-size:12px; }
-.node-detail-ping-card { min-width:0; flex:1 1 220px; padding:10px 12px; border:1px solid var(--miuix-divider); border-radius:12px; background:var(--miuix-surface-container); }
-.node-detail-ping-legend { display:grid; grid-template-columns:repeat(auto-fit,minmax(230px,1fr)); gap:8px; }
-.node-detail-ping-legend .node-detail-ping-card { min-width:0; }
-.node-detail-ping-legend .chart-note { grid-column:1/-1; }
-@media(max-width:640px){.node-detail-ping-legend{grid-template-columns:1fr}}
-.node-detail-ping-card-title { display:flex; align-items:center; gap:8px; min-width:0; font-size:13px; font-weight:600; }
-.node-detail-ping-card-title i { flex:none; width:9px; height:9px; border-radius:50%; }
-.node-detail-ping-card-title span { overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
-.node-detail-ping-card-values { display:grid; grid-template-columns:repeat(3,minmax(0,1fr)); gap:6px; margin-top:8px; }
-.node-detail-ping-card-values span { display:flex; flex-direction:column; gap:3px; min-width:0; }
-.node-detail-ping-card-values small { color:var(--miuix-on-surface-summary); font-size:10px; }
-.node-detail-ping-card-values b { overflow:hidden; text-overflow:ellipsis; white-space:nowrap; font:600 12px "JetBrains Mono","SF Mono",Menlo,monospace; }
+
 .node-detail-ping-summary { display:flex; flex-wrap:wrap; gap:8px; grid-column:1/-1; }
 .node-detail-ping-summary-item { display:inline-flex; align-items:center; gap:5px; max-width:100%; padding:4px 8px; border:1px solid var(--miuix-divider); border-radius:999px; background:var(--miuix-surface-container); font-size:11px; }
 .node-detail-ping-summary-item i { width:7px; height:7px; border-radius:50%; flex:none; }
