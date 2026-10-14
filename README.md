@@ -25,4 +25,4 @@ A soft, expressive interface with rounded surfaces, pastel status accents, compa
 
 ## License
 
-This project is available under the standard MIT License. It permits use, modification, distribution, sublicensing, and sale, including commercial use, subject to the license notice and disclaimer in `LICENSE`.
+This project is available under the standard MIT License, which permits use, modification, distribution, sublicensing, and sale, including commercial use, subject to the license notice and disclaimer in `LICENSE`.
