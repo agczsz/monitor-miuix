@@ -222,7 +222,6 @@ export const App: React.FC = () => {
                 key={node.id}
                 node={node}
                 showBilling={settings.show_billing}
-                accent={settings.node_card_accent}
                 onSelect={setSelectedNode}
               />
             ))}

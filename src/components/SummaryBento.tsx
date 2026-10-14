@@ -1,7 +1,6 @@
 import React from "react"
 import { Node } from "@/types/monitor"
-import { Flag } from "@/components/Flag"
-import { countryToName, formatBytes, formatPercent, formatSpeed } from "@/lib/format"
+import { formatBytes, formatPercent, formatSpeed } from "@/lib/format"
 import { getTrafficUsed } from "@/lib/traffic"
 
 interface SummaryBentoProps {
@@ -34,15 +33,6 @@ export const SummaryBento: React.FC<SummaryBentoProps> = ({ nodes }) => {
     metricNodes.length > 0
       ? [...metricNodes].sort((a, b) => (b.metrics?.cpu || 0) - (a.metrics?.cpu || 0))[0]
       : null
-
-  const locationGroups = new Map<string, Node[]>()
-  for (const node of nodes) {
-    const country = node.country || "XX"
-    const group = locationGroups.get(country) ?? []
-    group.push(node)
-    locationGroups.set(country, group)
-  }
-  const regions = Array.from(locationGroups.entries()).sort((a, b) => b[1].length - a[1].length).slice(0, 5)
 
   return (
     <section className="miuix-summary-grid" style={{ marginTop: "14px", marginBottom: "18px" }}>
@@ -107,11 +97,6 @@ export const SummaryBento: React.FC<SummaryBentoProps> = ({ nodes }) => {
         <div className="miuix-footnote2" style={{ color: "var(--miuix-on-surface-summary)" }}>
           有指标节点: {metricNodes.length}/{onlineCount} · 内存 {formatBytes(usedMem)} / {formatBytes(totalMem)}
         </div>
-      </div>
-
-      <div className="miuix-card" style={{ padding: "18px 20px", display: "flex", flexDirection: "column", gap: "9px" }}>
-        <span className="miuix-footnote1" style={{ color: "var(--miuix-on-surface-summary)", fontWeight: 600 }}>节点地域分布</span>
-        {regions.length ? regions.map(([country, group]) => <div key={country} className="region-stat"><span className="region-label"><Flag country={country} size="small" />{countryToName(country)}</span><span className="region-track"><i style={{ width: `${Math.max(4, group.length / Math.max(1, total) * 100)}%` }} /></span><b>{group.length}</b></div>) : <span className="miuix-footnote2">暂无地区信息</span>}
       </div>
 
       {/* Card 3: Real-time Network Throughput */}

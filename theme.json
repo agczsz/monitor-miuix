@@ -15,20 +15,6 @@
       "label": "节点卡片"
     },
     {
-      "key": "node_card_accent",
-      "type": "select",
-      "label": "卡片左侧强调色",
-      "default": "blue",
-      "help": "统一设置所有节点卡片左侧的强调色，不影响主界面配色。",
-      "options": [
-        { "value": "blue", "label": "澎湃蓝" },
-        { "value": "cyan", "label": "碧海青" },
-        { "value": "green", "label": "翡翠绿" },
-        { "value": "orange", "label": "科技橙" },
-        { "value": "purple", "label": "星云紫" }
-      ]
-    },
-    {
       "key": "show_summary",
       "type": "boolean",
       "label": "显示运行总览",

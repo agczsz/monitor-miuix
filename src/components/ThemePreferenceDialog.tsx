@@ -130,14 +130,6 @@ export const ThemePreferenceDialog: React.FC<ThemePreferenceDialogProps> = ({
           ))}
         </div>
 
-        <div className="miuix-subtitle" style={{ color: "var(--miuix-on-surface-summary)", marginBottom: "8px" }}>节点卡片强调色（由站点后台管理）</div>
-        <div className="miuix-tab-row accent-setting-display" aria-label="后台管理的节点卡片强调色" title={`当前：${settings.node_card_accent}`}>
-          {[{ key: "blue", label: "澎湃蓝", color: "#3482FF" }, { key: "cyan", label: "碧海青", color: "#06B6D4" }, { key: "green", label: "翡翠绿", color: "#16B767" }, { key: "orange", label: "科技橙", color: "#FF9500" }, { key: "purple", label: "星云紫", color: "#A855F7" }].map((option) => (
-            <span key={option.key} aria-current={settings.node_card_accent === option.key ? "true" : undefined} style={{ display: "inline-flex", alignItems: "center", gap: 5, padding: "7px 8px", opacity: settings.node_card_accent === option.key ? 1 : 0.5, fontSize: 11, whiteSpace: "nowrap" }}><i style={{ width: 9, height: 9, borderRadius: "50%", background: option.color }} />{option.label}</span>
-          ))}
-        </div>
-        <p className="miuix-footnote2" style={{ color: "var(--miuix-on-surface-summary)", margin: "4px 0 18px" }}>此项由 Monitor 后台的「主题设置」统一配置，访客不能覆盖。</p>
-
         {/* SwitchPreference Items */}
         <div className="miuix-subtitle" style={{ color: "var(--miuix-on-surface-summary)", marginBottom: "8px" }}>
           组件与视觉特效 (miuix-preference)

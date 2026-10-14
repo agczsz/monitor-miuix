@@ -1,6 +1,6 @@
 import React from "react"
 
-export type ResourceIconName = "cpu" | "memory" | "disk" | "traffic" | "network" | "location" | "clock"
+export type ResourceIconName = "cpu" | "memory" | "disk" | "traffic" | "network" | "location" | "clock" | "upload" | "download"
 
 const paths: Record<ResourceIconName, React.ReactNode> = {
   cpu: <><rect x="6" y="6" width="12" height="12" rx="2"/><path d="M9 9h6v6H9zM9 2v4m6-4v4M9 18v4m6-4v4M2 9h4m-4 6h4m12-6h4m-4 6h4"/></>,
@@ -10,6 +10,8 @@ const paths: Record<ResourceIconName, React.ReactNode> = {
   network: <><circle cx="6" cy="12" r="3"/><circle cx="18" cy="6" r="3"/><circle cx="18" cy="18" r="3"/><path d="m8.7 10.7 6.6-3.4M8.7 13.3l6.6 3.4"/></>,
   location: <><path d="M20 10c0 5-8 11-8 11S4 15 4 10a8 8 0 1 1 16 0Z"/><circle cx="12" cy="10" r="2.5"/></>,
   clock: <><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></>,
+  upload: <><path d="M12 19V5m0 0 6 6m-6-6-6 6"/></>,
+  download: <><path d="M12 5v14m0 0 6-6m-6 6-6-6"/></>,
 }
 
 export function ResourceIcon({ name, size = 16, className }: { name: ResourceIconName; size?: number; className?: string }) {

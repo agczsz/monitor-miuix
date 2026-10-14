@@ -1,11 +1,9 @@
 import manifest from "../../theme.json"
-import type { ColorMode, MiuixThemeSettings, NodeCardAccent, ViewMode } from "@/types/monitor"
+import type { ColorMode, MiuixThemeSettings, ViewMode } from "@/types/monitor"
 
 const VISITOR_STORAGE_KEY = "miuix_monitor_visitor_prefs_v2"
-const ACCENTS = ["blue", "cyan", "green", "orange", "purple"] as const
 const COLOR_MODES = ["system", "light", "dark"] as const
 const VIEWS = ["grid", "preference", "table"] as const
-export const ACCENT_OPTIONS = ACCENTS
 
 export const DEFAULT_SETTINGS: MiuixThemeSettings = {
   color_mode: "system",
@@ -14,7 +12,6 @@ export const DEFAULT_SETTINGS: MiuixThemeSettings = {
   show_billing: true,
   enable_blur: true,
   enable_squircle: true,
-  node_card_accent: "blue",
   monet_key_color: "#3482FF",
   site_subtitle: "极简清晰 · 实时节点状态",
   notice: "",
@@ -76,7 +73,6 @@ export async function loadThemeConfig(): Promise<MiuixThemeSettings> {
   } catch {
     // Ignore malformed or unavailable local storage.
   }
-  if (!ACCENTS.includes(merged.node_card_accent as NodeCardAccent)) merged.node_card_accent = "blue"
   return merged as unknown as MiuixThemeSettings
 }
 

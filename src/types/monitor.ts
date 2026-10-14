@@ -116,8 +116,6 @@ export type ColorMode = "system" | "light" | "dark"
 export type ViewMode = "grid" | "preference" | "table"
 export type SortField = "sort" | "cpu" | "mem" | "net" | "traffic"
 
-export type NodeCardAccent = "blue" | "cyan" | "green" | "orange" | "purple"
-
 export interface MiuixThemeSettings {
   site_subtitle: string
   color_mode: ColorMode
@@ -126,7 +124,6 @@ export interface MiuixThemeSettings {
   show_billing: boolean
   enable_blur: boolean
   enable_squircle: boolean
-  node_card_accent: NodeCardAccent
   monet_key_color: string
   notice: string
   history_days?: number
